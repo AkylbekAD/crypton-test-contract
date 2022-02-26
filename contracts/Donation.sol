@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 contract Donation {
 
-  address private owner;
-  address[] private arrayOfDonators;
+  address public owner;
+  address[] internal arrayOfDonators;
   address public donationAddress;
-  uint private index;
+  uint internal arrayLength;
 
   constructor() {
     owner = msg.sender;
@@ -14,42 +14,54 @@ contract Donation {
   }
 
   mapping (address => uint) internal donation;
-  mapping (uint => address) internal donator;
 
   event Received(address, uint);
 
-  function Donate () public payable {
+  function donate () public payable {
     donation[msg.sender] += msg.value;
+  /* 
+    // должен был добавлять в массив только уникальные адреса
+    bool isDonatorExist = false;
+    
+    for(uint i = 0; i <= arrayLength; i++) {
+      if (msg.sender == arrayOfDonators[i]){
+        isDonatorExist = true;
+      }
+    }
 
-    index++;
-    donator[index] = msg.sender;
-
-    arrayOfDonators.push(donator[index]);
-
+    if (isDonatorExist == false) {
+      arrayOfDonators.push(msg.sender);
+    } 
+  */
+    arrayOfDonators.push(msg.sender);
     emit Received(msg.sender, msg.value);
   }
 
   function getBalance () public view returns (uint) {
-    return donationAddress.balance;
+    return address(this).balance;
   }
 
-  function showDonation (address donatorAddress) public view returns (uint) {
+  function showDonationSum (address donatorAddress) public view returns (uint) {
     return donation[donatorAddress];
   }
 
   function showAllDonators () public view returns (address[] memory) {
-    require(msg.sender == owner, "You`re not an owner!");
     return arrayOfDonators;
   }
 
-  function WithdrawDonations (address payable receiver) external onlyOwner {
-    uint amount = donationAddress.balance;
-    (bool success,) = receiver.call{value: amount}("");
-    require(success, "Failed to send Ether");
+  function withdrawDonations (address payable _receiver) external onlyOwner {
+    _receiver.transfer(address(this).balance);
   }
 
   modifier onlyOwner () {
     require(msg.sender == owner, "You`re not an owner!");
     _;
+  }
+
+  receive() external payable {
+    donation[msg.sender] += msg.value;
+    arrayOfDonators.push(msg.sender);
+
+    emit Received(msg.sender, msg.value);
   }
 }
