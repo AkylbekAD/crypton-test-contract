@@ -3,12 +3,15 @@ pragma solidity ^0.8.0;
 
 contract Donation {
 
-  address private owner;
-  address[] private arrayOfDonators;
+  address public owner;
+  address[] internal arrayOfDonators;
   address public donationAddress;
+  uint internal arrayIndex;
 
   constructor() {
     owner = msg.sender;
+    donationAddress = address(this);
+    arrayIndex = 1;
   }
 
   mapping (address => uint) internal donation;
@@ -17,20 +20,35 @@ contract Donation {
 
   function donate () public payable {
     donation[msg.sender] += msg.value;
+/*   
+    // должен был добавлять в массив только уникальные адреса
+    bool isDonatorExist = false;
+    
+    for(uint i = 0; i <= arrayIndex; i++) {
+      if (msg.sender == arrayOfDonators[i]){
+        isDonatorExist = true;
+      }
+    }
+
+    if (isDonatorExist == false) {
+      arrayOfDonators.push(msg.sender);
+      arrayIndex++;
+    } 
+*/
     arrayOfDonators.push(msg.sender);
 
     emit Received(msg.sender, msg.value);
   }
 
   function getBalance () public view returns (uint) {
-    return donationAddress.balance;
+    return address(this).balance;
   }
 
   function showDonationSum (address donatorAddress) public view returns (uint) {
     return donation[donatorAddress];
   }
 
-  function showAllDonators () public view onlyOwner returns (address[] memory) {
+  function showAllDonators () public view returns (address[] memory) {
     return arrayOfDonators;
   }
 
