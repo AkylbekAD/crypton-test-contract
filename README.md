@@ -24,10 +24,16 @@ showDonationSum - There is a feature in the contract that allows you to get the 
 ### Try running some of the following tasks:
 
 ```shell
+
+npx hardhat node - to start localhost node to do test smart-contract tasks
+npx hardhat help - to see all hardhat and smart-contract tasks 
+
+example command to interact with smart-contract to donate 10 ether from 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 address:
+npx hardhat donate --account 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 --amount 10
+
 npx hardhat accounts
 npx hardhat compile
 npx hardhat clean
 npx hardhat test
-npx hardhat node
-npx hardhat help
+
 ```
