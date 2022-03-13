@@ -3,8 +3,9 @@
 This project demonstrates a basic Hardhat use case. It comes with a Donation contract, a test for that contract, a sample script that deploys that contract.
 
 You can check or test deployed contract on:
-Etherscan - https://rinkeby.etherscan.io/address/0xA8547B1e8AD1ceFDC8C0833E711011F37983B96d#code
-Alchemy - https://dashboard.alchemyapi.io/apps/qmhiswe8ap56xkcu
+Etherscan - https://rinkeby.etherscan.io/address/0x09801CF826d876E6cc2aa32f6127b099C8D0EA2C#readContract
+
+Alchemy - https://dashboard.alchemyapi.io/apps/t0snyf466mrjs3mg
 
 ## Functionality
 
@@ -25,7 +26,7 @@ showDonationSum - There is a feature in the contract that allows you to get the 
 
 ```shell
 
-npx hardhat node - to start localhost node to do test smart-contract tasks
+npx hardhat node - to start localhost node to do smart-contract tasks
 npx hardhat help - to see all hardhat and smart-contract tasks 
 
 example command to interact with smart-contract to donate 10 ether from 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 address:
