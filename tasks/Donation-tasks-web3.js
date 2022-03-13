@@ -48,9 +48,11 @@ const DonationInterface = new web3.eth.Contract(abi,contractAddress);
 
     task("withdrawDonations", "Wiwthdraw all ethers from smartcontract to certain address")
         .addParam("receiver", "Account address you want to send all ether")
+        .addParam("amount", "Amount of ether you want to send")
         .setAction(async (taskArgs) => {
             const account = web3.utils.toChecksumAddress(taskArgs.account);
-            await DonationInterface.methods.withdrawDonations().send({to:account})
+            const amount = web3.utils.toWei(taskArgs.amount);
+            await DonationInterface.methods.withdrawDonations().send({to:account, value:amount})
                 .on('receipt', function(receipt) {
                     console.log(receipt)
                 })

@@ -3,12 +3,12 @@ require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 require("@nomiclabs/hardhat-web3");
 
-require("./tasks/Donation-tasks-web3")
+require("./tasks/Donation-tasks-web3") // перед новой компиляцией надо закомментировать!!!
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: "0.8.0",
   networks: {
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,

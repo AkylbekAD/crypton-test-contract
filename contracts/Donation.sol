@@ -6,36 +6,34 @@ contract Donation {
   address public owner;
   address[] internal arrayOfDonators;
   address public donationAddress;
-  uint internal arrayIndex;
 
   constructor() {
     owner = msg.sender;
     donationAddress = address(this);
-    arrayIndex = 1;
   }
 
   mapping (address => uint) internal donation;
 
   event Received(address, uint);
 
-  function donate () public payable {
+  receive() external payable {
+    if(donation[msg.sender] == 0) {
+            arrayOfDonators.push(msg.sender);
+        }
     donation[msg.sender] += msg.value;
-/*   
-    // должен был добавлять в массив только уникальные адреса
-    bool isDonatorExist = false;
-    
-    for(uint i = 0; i <= arrayIndex; i++) {
-      if (msg.sender == arrayOfDonators[i]){
-        isDonatorExist = true;
-      }
-    }
 
-    if (isDonatorExist == false) {
+    emit Received(msg.sender, msg.value);
+  }
+  
+  fallback() external payable {    
+    emit Received(msg.sender, msg.value);
+  }
+
+  function donate () public payable {
+    if(donation[msg.sender] == 0) {
       arrayOfDonators.push(msg.sender);
-      arrayIndex++;
-    } 
-*/
-    arrayOfDonators.push(msg.sender);
+    }
+    donation[msg.sender] += msg.value;
 
     emit Received(msg.sender, msg.value);
   }
@@ -46,25 +44,18 @@ contract Donation {
 
   function showDonationSum (address donatorAddress) public view returns (uint) {
     return donation[donatorAddress];
-  }
+  } //впринципе не обязательная функция, т.к. mapping donation может возвращать тоже самое
 
   function showAllDonators () public view returns (address[] memory) {
     return arrayOfDonators;
   }
 
-  function withdrawDonations (address payable _receiver) external onlyOwner {
-    _receiver.transfer(address(this).balance);
+  function withdrawDonations (address payable _receiver) payable external onlyOwner {
+    _receiver.transfer(msg.value);
   }
 
   modifier onlyOwner () {
     require(msg.sender == owner, "You`re not an owner!");
     _;
-  }
-
-  receive() external payable {
-    donation[msg.sender] += msg.value;
-    arrayOfDonators.push(msg.sender);
-
-    emit Received(msg.sender, msg.value);
   }
 }
