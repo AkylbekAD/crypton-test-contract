@@ -6,7 +6,6 @@ contract Donation {
   address public owner;
   address[] internal arrayOfDonators;
   address public donationAddress;
-  uint internal arrayLength;
 
   constructor() {
     owner = msg.sender;
@@ -17,23 +16,25 @@ contract Donation {
 
   event Received(address, uint);
 
-  function donate () public payable {
+  receive() external payable {
+    if(donation[msg.sender] == 0) {
+            arrayOfDonators.push(msg.sender);
+        }
     donation[msg.sender] += msg.value;
-  /* 
-    // должен был добавлять в массив только уникальные адреса
-    bool isDonatorExist = false;
-    
-    for(uint i = 0; i <= arrayLength; i++) {
-      if (msg.sender == arrayOfDonators[i]){
-        isDonatorExist = true;
-      }
-    }
 
-    if (isDonatorExist == false) {
-      arrayOfDonators.push(msg.sender);
-    } 
-  */
-    arrayOfDonators.push(msg.sender);
+    emit Received(msg.sender, msg.value);
+  }
+  
+  fallback() external payable {    
+    emit Received(msg.sender, msg.value);
+  }
+
+  function donate () public payable {
+    if(donation[msg.sender] == 0) {
+        arrayOfDonators.push(msg.sender);
+    }
+    donation[msg.sender] += msg.value;
+
     emit Received(msg.sender, msg.value);
   }
 
@@ -49,19 +50,12 @@ contract Donation {
     return arrayOfDonators;
   }
 
-  function withdrawDonations (address payable _receiver) external onlyOwner {
-    _receiver.transfer(address(this).balance);
+  function withdrawDonations (address payable _receiver) payable external onlyOwner {
+    _receiver.transfer(msg.value);
   }
 
   modifier onlyOwner () {
     require(msg.sender == owner, "You`re not an owner!");
     _;
-  }
-
-  receive() external payable {
-    donation[msg.sender] += msg.value;
-    arrayOfDonators.push(msg.sender);
-
-    emit Received(msg.sender, msg.value);
   }
 }
