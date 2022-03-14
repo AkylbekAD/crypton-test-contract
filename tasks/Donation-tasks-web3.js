@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-web3");
 const {abi} = require('../artifacts/contracts/Donation.sol/Donation.json');
 
-const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
+const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
 
 const Web3 = require('web3');
 const web3 = new Web3 (new Web3.providers.HttpProvider("http://127.0.0.1:8545/"));
@@ -66,3 +66,5 @@ const DonationInterface = new web3.eth.Contract(abi,contractAddress);
 
             console.log(web3.utils.fromWei(balance, "ether"), "ETH"); 
         });
+
+        
